@@ -76,11 +76,15 @@ export default {
     } catch (error) {}
   },
   getUserDetails: async (req: Request, res: Response) => {
-    const username = req.body.userId;
-    console.log(username, 8585);
-    const user = await UserModel.findOne({ username });
+    console.log(req.body);
+    
+    const userId = req.body.userId;
+    console.log(userId, 8585);
+    const user = await UserModel.findById(userId);    
     if (user) {
-      res.status(201).json({ user });
+      console.log('if user');
+      
+      res.status(201).json(user);
     }
   },
   getAllUsers: async (req: Request, res: Response) => {
