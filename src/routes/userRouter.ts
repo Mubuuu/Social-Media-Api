@@ -19,4 +19,5 @@ router.post('/like-post',postController.likePost)
 router.post('/get-all-users',authController.getAllUsers)
 router.post('/follow',authController.follow)
 router.post('/get-followers',authController.getFollowers)
+router.post('/get-followings',authController.getFollowings)
 export default router

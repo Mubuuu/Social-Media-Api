@@ -183,6 +183,56 @@ export default {
           },
         },
       ]);
+      console.log(data);
+      
+      res.status(201).json(data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getFollowings: async (req: Request, res: Response) => {
+    console.log("haaai");
+
+    try {
+      console.log(req.body, "njan aan kunjikkannaa");
+      const { userId } = req.body;
+      const data = await userModel.aggregate([
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(userId),
+          },
+        },
+        {
+          $project: {
+            following: 1,
+          },
+        },
+        {
+          $unwind: {
+            path: "$following",
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "following",
+            foreignField: "_id",
+            as: "following",
+          },
+        },
+        {
+          $project: {
+            following: { $arrayElemAt: ["$following", 0] },
+          },
+        },
+      ]);
+      console.log(data);
+      
       res.status(201).json(data);
     } catch (error) {
       console.log(error);
