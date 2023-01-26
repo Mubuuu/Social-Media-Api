@@ -76,14 +76,10 @@ export default {
     } catch (error) {}
   },
   getUserDetails: async (req: Request, res: Response) => {
-    console.log(req.body);
-    
     const userId = req.body.userId;
     console.log(userId, 8585);
-    const user = await UserModel.findById(userId);    
+    const user = await UserModel.findById(userId);
     if (user) {
-      console.log('if user');
-      
       res.status(201).json(user);
     }
   },
@@ -147,10 +143,10 @@ export default {
     }
   },
   getFollowers: async (req: Request, res: Response) => {
-    console.log('haaai');
-    
+    console.log("haaai");
+
     try {
-      console.log(req.body, 'njan aan kunjikkannaa');
+      console.log(req.body, "njan aan kunjikkannaa");
       const { userId } = req.body;
       const data = await userModel.aggregate([
         {
