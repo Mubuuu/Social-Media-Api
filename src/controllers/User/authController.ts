@@ -1,4 +1,5 @@
 import { Response, Request } from "express";
+import qr from "qrcode";
 import UserModel from "../../models/userModel";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../utils/jwt";
@@ -184,7 +185,7 @@ export default {
         },
       ]);
       console.log(data);
-      
+
       res.status(201).json(data);
     } catch (error) {
       console.log(error);
@@ -232,10 +233,53 @@ export default {
         },
       ]);
       console.log(data);
-      
+
       res.status(201).json(data);
     } catch (error) {
       console.log(error);
+    }
+  },
+  getLink: async (req: Request, res: Response) => {
+    try {
+      const { url } = req.body;
+      console.log(url);
+
+      qr.toDataURL(url, (err, link) => {
+        if (err) console.log(err, "error");
+
+        res.status(200).json(link);
+      });
+    } catch (error) {}
+  },
+  changePassword: async (req: Request, res: Response) => {
+    try {
+      console.log(req.body, 'chaaange');
+      
+      let { currpassword, newpassword, userId } = req.body;
+      const user = await userModel.findById(userId)
+      if(user){
+        const passwordCheck = await bcrypt.compare(currpassword, user.password);
+        if(passwordCheck){
+          const salt = await bcrypt.genSalt(10);
+          newpassword = await bcrypt.hash(newpassword, salt);
+          const response = await userModel.updateOne(
+            { _id: userId },
+            {
+              $set: {
+                password: newpassword
+              },
+            }
+          );
+          res.status(201).json({status:true,message:'Password changed successfully'})
+        }else{
+          res.status(201).json({status:false,message:'Password did not match'})
+        }
+      }else{
+        res.status(201).json({status:false,message:'User not exist'})
+      }
+      
+    } catch (error) {
+      res.status(500).json(error)
     }
   },
 };

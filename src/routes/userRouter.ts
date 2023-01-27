@@ -20,4 +20,6 @@ router.post('/get-all-users',authController.getAllUsers)
 router.post('/follow',authController.follow)
 router.post('/get-followers',authController.getFollowers)
 router.post('/get-followings',authController.getFollowings)
+router.post('/get-qrcode',authController.getLink)
+router.post('/change-password',authController.changePassword)
 export default router

@@ -2,6 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
+import qr from 'qrcode'
 import connectDB from "./config/connection";
 
 // importing routes
