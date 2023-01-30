@@ -25,4 +25,5 @@ router.post('/get-followings',authController.getFollowings)
 router.post('/get-qrcode',authController.getLink)
 router.post('/change-password',authController.changePassword)
 router.post('/upload-shorts',shortsController.uploadShorts)
+router.post('/get-shorts',shortsController.getAllShorts)
 export default router
