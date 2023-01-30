@@ -14,18 +14,14 @@ export default {
         $or: [{ email: req.body.email }, { mobile: req.body.mobile }],
       });
       if (userVerify) {
-        console.log("already ind");
-
-        res.status(401).json({
+        res.status(201).json({
           status: false,
+          message: "user Already exist",
         });
       } else {
-        console.log("new aaan");
-
         const userData = req.body;
         const salt = await bcrypt.genSalt(10);
         userData.password = await bcrypt.hash(userData.password, salt);
-
         userData.active = true;
         const newUser = new UserModel(userData);
         await newUser.save();
@@ -37,6 +33,61 @@ export default {
     } catch (error) {
       console.log(error, "Signup Error");
     }
+  },
+  googleLogin: async (req: Request, res: Response) => {
+    console.log(req.body, "googlen bofy");
+
+    try {
+      const userVerify = await UserModel.findOne({
+        email: req.body.email,
+      });
+      if (userVerify) {
+        const token = generateToken({ id: userVerify._id.toString() }, "30m");
+        res.status(201).json({
+          token,
+          status: true,
+          message: "welcome to connect with",
+          userId: userVerify._id,
+          username: userVerify.username,
+          email: userVerify.email,
+          dob: userVerify.dob,
+          mobile: userVerify.mobile,
+          place: userVerify.place,
+          bio: userVerify.bio,
+          relationship: userVerify.relationship,
+          profile_img: userVerify.profile_img,
+          cover_img: userVerify.cover_img,
+          verified: userVerify.verified,
+          followers: userVerify.followers,
+          following: userVerify.following,
+        });
+      } else {
+        const userData = req.body;
+        userData.active = true
+        const newUser = new UserModel(userData);
+        const user = await newUser.save();
+        console.log(user, "frm google login");
+        const token = generateToken({ id: user._id.toString() }, "30m");
+        res.status(201).json({
+          token,
+          status: true,
+          message: "welcome to connect with",
+          userId: user._id,
+          username: user.username,
+          email: user.email,
+          dob: user.dob,
+          mobile: user.mobile,
+          place: user.place,
+          bio: user.bio,
+          relationship: user.relationship,
+          profile_img: user.profile_img,
+          cover_img: user.cover_img,
+          verified: user.verified,
+          followers: user.followers,
+          following: user.following,
+        });
+      }
+    } catch (error) {}
   },
   postLogin: async (req: Request, res: Response) => {
     try {
@@ -253,33 +304,40 @@ export default {
   },
   changePassword: async (req: Request, res: Response) => {
     try {
-      console.log(req.body, 'chaaange');
-      
+      console.log(req.body, "chaaange");
+
       let { currpassword, newpassword, userId } = req.body;
-      const user = await userModel.findById(userId)
-      if(user){
+      const user = await userModel.findById(userId);
+      if (user) {
         const passwordCheck = await bcrypt.compare(currpassword, user.password);
-        if(passwordCheck){
+        if (passwordCheck) {
           const salt = await bcrypt.genSalt(10);
           newpassword = await bcrypt.hash(newpassword, salt);
+          console.log(newpassword);
+
           const response = await userModel.updateOne(
             { _id: userId },
             {
               $set: {
-                password: newpassword
+                password: newpassword,
               },
             }
           );
-          res.status(201).json({status:true,message:'Password changed successfully'})
-        }else{
-          res.status(201).json({status:false,message:'Password did not match'})
+          console.log(response, "response");
+
+          res
+            .status(201)
+            .json({ status: true, message: "Password changed successfully" });
+        } else {
+          res
+            .status(201)
+            .json({ status: false, message: "Password did not match" });
         }
-      }else{
-        res.status(201).json({status:false,message:'User not exist'})
+      } else {
+        res.status(201).json({ status: false, message: "User not exist" });
       }
-      
     } catch (error) {
-      res.status(500).json(error)
+      res.status(500).json(error);
     }
   },
 };

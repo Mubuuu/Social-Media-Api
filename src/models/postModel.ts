@@ -20,11 +20,9 @@ const postSchema = new Schema<Post>({
   },
   caption: {
     type: String,
-    required: true,
   },
   place: {
     type: String,
-    required: true,
   },
   likes: {
     type: [],
