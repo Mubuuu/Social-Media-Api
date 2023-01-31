@@ -63,7 +63,7 @@ export default {
         });
       } else {
         const userData = req.body;
-        userData.active = true
+        userData.active = true;
         const newUser = new UserModel(userData);
         const user = await newUser.save();
         console.log(user, "frm google login");
@@ -338,6 +338,16 @@ export default {
       }
     } catch (error) {
       res.status(500).json(error);
+    }
+  },
+  searchUsers: async (req: Request, res: Response) => {
+    const { value } = req.body;
+    try {
+      console.log(value);
+      const users = await userModel.find({ "username": new RegExp(value,"i") });
+      res.status(201).json(users.slice(0,10))
+    } catch (error) {
+      res.json(error)
     }
   },
 };

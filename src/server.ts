@@ -4,16 +4,13 @@ dotenv.config();
 import cors from "cors";
 import connectDB from "./config/connection";
 
-console.log(1);
-
-// importing routes
+// import routes
 import userRouter from "./routes/userRouter";
 import adminRouter from "./routes/adminRouter";
 import chatRouter from "./routes/chatRouter";
 import messageRouter from "./routes/messageRouter";
 
 connectDB;
-console.log(2);
 const app: Application = express();
 
 app.use(express.json());
@@ -34,6 +31,5 @@ app.use(
   
   const port = process.env.PORT || 5000;
   app.listen(port, () => {
-  console.log(3);
   console.log(`server started at port ${port}`);
 });
