@@ -12,7 +12,7 @@ export default {
         .status(201)
         .json({ status: true, message: "Short added successfully" });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getAllShorts: async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export default {
         .sort({ createdAt: -1 });
       res.status(200).json(allShorts);
     } catch (error) {
-      console.error(error);
+      res.json(error)
     }
   },
 };

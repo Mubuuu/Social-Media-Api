@@ -1,5 +1,4 @@
 import { Response, Request, response } from "express";
-import { json } from "stream/consumers";
 import commentModel from "../../models/commentModel";
 import postModel from "../../models/postModel";
 import userModel from "../../models/userModel";
@@ -12,7 +11,7 @@ export default {
       await newPost.save();
       res.status(201).json({ status: true, message: "post added" });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getPosts: async (req: Request, res: Response) => {
@@ -25,7 +24,7 @@ export default {
         res.json({ mesage: "no posts yet" });
       }
     } catch (error) {
-      console.log(error);
+      res.json(error)
     }
   },
   getAllPosts: async (req: Request, res: Response) => {
@@ -33,21 +32,17 @@ export default {
       const data = await postModel.find().populate("userId");
       res.status(201).json({ data });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getAllUserDetails: async (req: Request, res: Response) => {
     try {
       const { userId } = req.body;
-      console.log(userId, "userId");
-
-      const userData = await userModel.findOne({ _id: userId });
-      console.log(userData, "data");
-
+        const userData = await userModel.findOne({ _id: userId });
       const userPosts = await postModel.find({ userId });
       res.status(201).json({ userData, userPosts });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   editProfile: async (req: Request, res: Response) => {
@@ -77,9 +72,8 @@ export default {
           .json({ status: true, message: "profile update finished" });
       }
       res.json({ status: false, message: "somethig went wrong" });
-      console.log(response, "bodyy aaaan");
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   addComment: async (req: Request, res: Response) => {
@@ -124,10 +118,9 @@ export default {
           status: false,
           message: "Please Add Comment",
         });
-        console.log(333333333);
       }
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getAllComments: async (req: Request, res: Response) => {
@@ -136,7 +129,7 @@ export default {
       const response = await commentModel.find({ postId });
       res.status(201).json({ response });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   likePost: async (req: Request, res: Response) => {
@@ -165,7 +158,7 @@ export default {
       const posts = await postModel.findById(postId);
       res.status(201).json({ posts });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
 };

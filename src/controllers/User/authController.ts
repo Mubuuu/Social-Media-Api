@@ -7,8 +7,6 @@ import userModel from "../../models/userModel";
 import mongoose, { isObjectIdOrHexString } from "mongoose";
 export default {
   postRegister: async (req: Request, res: Response) => {
-    console.log(req.body, 987987);
-
     try {
       const userVerify = await UserModel.findOne({
         $or: [{ email: req.body.email }, { mobile: req.body.mobile }],
@@ -31,12 +29,10 @@ export default {
         });
       }
     } catch (error) {
-      console.log(error, "Signup Error");
+      res.json(error)
     }
   },
   googleLogin: async (req: Request, res: Response) => {
-    console.log(req.body, "googlen bofy");
-
     try {
       const userVerify = await UserModel.findOne({
         email: req.body.email,
@@ -66,7 +62,6 @@ export default {
         userData.active = true;
         const newUser = new UserModel(userData);
         const user = await newUser.save();
-        console.log(user, "frm google login");
         const token = generateToken({ id: user._id.toString() }, "30m");
         res.status(201).json({
           token,
@@ -125,11 +120,12 @@ export default {
       } else {
         res.json({ status: false, message: "invalid email" });
       }
-    } catch (error) {}
+    } catch (error) {
+      res.json(error)
+    }
   },
   getUserDetails: async (req: Request, res: Response) => {
     const userId = req.body.userId;
-    console.log(userId, 8585);
     const user = await UserModel.findById(userId);
     if (user) {
       res.status(201).json(user);
@@ -138,19 +134,14 @@ export default {
   getAllUsers: async (req: Request, res: Response) => {
     try {
       const users = await userModel.find();
-      console.log(users, 8787);
-
       res.status(201).json({ users });
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   follow: async (req: Request, res: Response) => {
     try {
       const { currId, userId } = req.body;
-      console.log(currId, 2222);
-      console.log(userId, 1111);
-
       const user = await userModel.findById(userId);
       const currUser = await userModel.findById(currId);
       if (currUser?.following.includes(userId)) {
@@ -191,14 +182,11 @@ export default {
         res.status(201).json({ status: true, message: "follow validated" });
       }
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getFollowers: async (req: Request, res: Response) => {
-    console.log("haaai");
-
     try {
-      console.log(req.body, "njan aan kunjikkannaa");
       const { userId } = req.body;
       const data = await userModel.aggregate([
         {
@@ -235,18 +223,13 @@ export default {
           },
         },
       ]);
-      console.log(data);
-
       res.status(201).json(data);
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getFollowings: async (req: Request, res: Response) => {
-    console.log("haaai");
-
     try {
-      console.log(req.body, "njan aan kunjikkannaa");
       const { userId } = req.body;
       const data = await userModel.aggregate([
         {
@@ -283,29 +266,22 @@ export default {
           },
         },
       ]);
-      console.log(data);
-
       res.status(201).json(data);
     } catch (error) {
-      console.log(error);
+      res.json(error);
     }
   },
   getLink: async (req: Request, res: Response) => {
     try {
       const { url } = req.body;
-      console.log(url);
-
       qr.toDataURL(url, (err, link) => {
         if (err) console.log(err, "error");
-
         res.status(200).json(link);
       });
     } catch (error) {}
   },
   changePassword: async (req: Request, res: Response) => {
     try {
-      console.log(req.body, "chaaange");
-
       let { currpassword, newpassword, userId } = req.body;
       const user = await userModel.findById(userId);
       if (user) {
@@ -313,8 +289,6 @@ export default {
         if (passwordCheck) {
           const salt = await bcrypt.genSalt(10);
           newpassword = await bcrypt.hash(newpassword, salt);
-          console.log(newpassword);
-
           const response = await userModel.updateOne(
             { _id: userId },
             {
@@ -323,8 +297,6 @@ export default {
               },
             }
           );
-          console.log(response, "response");
-
           res
             .status(201)
             .json({ status: true, message: "Password changed successfully" });
@@ -343,7 +315,6 @@ export default {
   searchUsers: async (req: Request, res: Response) => {
     const { value } = req.body;
     try {
-      console.log(value);
       const users = await userModel.find({ "username": new RegExp(value,"i") });
       res.status(201).json(users.slice(0,10))
     } catch (error) {

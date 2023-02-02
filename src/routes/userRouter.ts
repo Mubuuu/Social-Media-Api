@@ -1,4 +1,3 @@
-import { sign } from "crypto"
 import express,{Router} from "express"
 import authController from "../controllers/User/authController"
 import AuthController from '../controllers/User/authController'

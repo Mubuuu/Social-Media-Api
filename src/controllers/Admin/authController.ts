@@ -4,15 +4,9 @@ import { generateToken } from "../../utils/jwt";
 import adminModel from "../../models/adminModel";
 
 export const adminLogin = async (req: Request, res: Response) => {
-  console.log(req.body);
   const { email, password } = req.body;
-
   try {
-    console.log(email);
-
     const admin = await adminModel.find({email});
-    console.log(admin, "admin");
-
     if (admin) {
       const passwordCheck = await bcrypt.compare(password, admin[0].password);
       if (passwordCheck) {
@@ -29,8 +23,6 @@ export const adminLogin = async (req: Request, res: Response) => {
       res.status(201).json({ status: false, message: "incorrect email" });
     }
   } catch (error) {
-    console.log(error);
-    
     res.status(500).json(error);
   }
 };
