@@ -1,28 +1,20 @@
 import { Schema, model } from "mongoose";
 
-interface Post {
+interface shorts {
   userId: string;
-  image: string;
-  caption: string;
-  place: string;
+  url: string;
   likes: any[];
 }
 
-const postSchema = new Schema<Post>({
+const shortsSchema = new Schema<shorts>({
   userId: {
     type: String,
     ref: "user",
     required: true,
   },
-  image: {
+  url: {
     type: String,
     required: true,
-  },
-  caption: {
-    type: String,
-  },
-  place: {
-    type: String,
   },
   likes: {
     type: [],
@@ -32,4 +24,4 @@ const postSchema = new Schema<Post>({
   timestamps:true
 });
 
-export default model<Post>("post", postSchema);
+export default model<shorts>("short", shortsSchema);
