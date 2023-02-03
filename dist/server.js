@@ -15,14 +15,14 @@ const chatRouter_1 = __importDefault(require("./routes/chatRouter"));
 const messageRouter_1 = __importDefault(require("./routes/messageRouter"));
 connection_1.default;
 const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cors_1.default)({
     origin: ["*"],
     methods: ["GET", "POST"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Access",],
+    allowedHeaders: ["Content-Type", "Access"],
 }));
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: false }));
 app.use("/", userRouter_1.default);
 app.use("/chat/", chatRouter_1.default);
 app.use("/admin", adminRouter_1.default);

@@ -12,23 +12,23 @@ import messageRouter from "./routes/messageRouter";
 
 connectDB;
 const app: Application = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
     origin: ["*"],
     methods: ["GET", "POST"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Access",],
+    allowedHeaders: ["Content-Type", "Access"],
   })
-  );
-  app.use("/", userRouter);
-  app.use("/chat/", chatRouter);
-  app.use("/admin", adminRouter);
-  app.use("/message/", messageRouter);
-  
-  const port = process.env.PORT || 5000;
-  app.listen(port, () => {
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/", userRouter);
+app.use("/chat/", chatRouter);
+app.use("/admin", adminRouter);
+app.use("/message/", messageRouter);
+
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
   console.log(`server started at port ${port}`);
 });
