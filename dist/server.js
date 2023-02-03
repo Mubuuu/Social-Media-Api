@@ -18,15 +18,12 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.options('*', (0, cors_1.default)());
-// app.use(
-//   cors({
-//     origin: ["https://connect.techmart.tech"],
-//     methods: ["GET", "POST"],
-//     credentials: true,
-//     allowedHeaders: ["Content-Type", "Access",],
-//   })
-//   );
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: ["https://connect.techmart.tech"],
+    methods: ["GET", "POST"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Access",],
+}));
 app.use("/", userRouter_1.default);
 app.use("/chat/", chatRouter_1.default);
 app.use("/admin", adminRouter_1.default);

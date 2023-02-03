@@ -16,15 +16,14 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.options('*', cors())
-// app.use(
-//   cors({
-//     origin: ["https://connect.techmart.tech"],
-//     methods: ["GET", "POST"],
-//     credentials: true,
-//     allowedHeaders: ["Content-Type", "Access",],
-//   })
-//   );
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://connect.techmart.tech"],
+    methods: ["GET", "POST"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Access",],
+  })
+  );
   app.use("/", userRouter);
   app.use("/chat/", chatRouter);
   app.use("/admin", adminRouter);
