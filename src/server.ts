@@ -13,12 +13,14 @@ import messageRouter from "./routes/messageRouter";
 connectDB;
 const app: Application = express();
 app.use(
-  cors({
-    origin: ["*"],
-    methods: ["GET", "POST"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Access"],
-  })
+  cors(
+  //   {
+  //   origin: ["*"],
+  //   methods: ["GET", "POST","PUT","DELETE","PATCH"],
+  //   credentials: true,
+  //   allowedHeaders: ["Content-Type", "Access"],
+  // }
+  )
 );
 
 app.use(express.json());
