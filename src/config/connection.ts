@@ -6,7 +6,6 @@ if(mongooseconnect){
     mongoose.connect(mongooseconnect,(err):void=>{
         if(err) return console.log('error connetion'+err);
         console.log('Database connected');
-        
     })
 }
 export default mongoose
