@@ -30,6 +30,7 @@ app.use(function (req, res, next) {
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // Pass to next layer of middleware
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
 app.use(express_1.default.json());
