@@ -15,10 +15,9 @@ const app: Application = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.options('*', cors())
 app.use(
   cors({
-    origin: ["https://connect.techmart.tech"],
+    origin: ["*"],
     methods: ["GET", "POST"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Access",],
