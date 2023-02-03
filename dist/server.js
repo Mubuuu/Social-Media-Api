@@ -26,7 +26,7 @@ const app = (0, express_1.default)();
 // );
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'https://connect.techmart.tech/ , https://www.connect.techmart.tech/');
+    res.setHeader('Access-Control-Allow-Origin', 'https://www.connect.techmart.tech/');
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // Pass to next layer of middleware
