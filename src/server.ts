@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["https://connect.techmart.tech"],
     methods: ["GET", "POST"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Access",],
