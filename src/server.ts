@@ -45,7 +45,7 @@ app.use("/chat/", chatRouter);
 app.use("/admin", adminRouter);
 app.use("/message/", messageRouter);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`server started at port ${port}`);
 });

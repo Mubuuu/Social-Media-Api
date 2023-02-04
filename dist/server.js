@@ -40,7 +40,7 @@ app.use("/", userRouter_1.default);
 app.use("/chat/", chatRouter_1.default);
 app.use("/admin", adminRouter_1.default);
 app.use("/message/", messageRouter_1.default);
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`server started at port ${port}`);
 });
