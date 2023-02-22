@@ -16,7 +16,7 @@ export default {
   },
   getPosts: async (req: Request, res: Response) => {
     try {
-      const { userId } = req.body;
+      const userId = req.params.id;
       const data = await postModel.find({ userId });
       if (data.length > 0) {
         res.status(201).json({ data });
@@ -41,37 +41,6 @@ export default {
         const userData = await userModel.findOne({ _id: userId });
       const userPosts = await postModel.find({ userId });
       res.status(201).json({ userData, userPosts });
-    } catch (error) {
-      res.json(error);
-    }
-  },
-  editProfile: async (req: Request, res: Response) => {
-    try {
-      const {
-        userId,
-        profile_img,
-        cover_img,
-        username,
-        dob,
-        bio,
-        place,
-        relationship,
-      } = req.body;
-      const respose = await userModel.findByIdAndUpdate(userId, {
-        profile_img: profile_img,
-        cover_img: cover_img,
-        username: username,
-        dob: dob,
-        bio: bio,
-        place: place,
-        relationship: relationship,
-      });
-      if (response) {
-        res
-          .status(201)
-          .json({ status: true, message: "profile update finished" });
-      }
-      res.json({ status: false, message: "somethig went wrong" });
     } catch (error) {
       res.json(error);
     }
@@ -125,7 +94,7 @@ export default {
   },
   getAllComments: async (req: Request, res: Response) => {
     try {
-      const { postId } = req.body;
+      const postId = req.params.id;
       const response = await commentModel.find({ postId });
       res.status(201).json({ response });
     } catch (error) {

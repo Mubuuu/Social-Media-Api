@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
 const commentModel_1 = __importDefault(require("../../models/commentModel"));
 const postModel_1 = __importDefault(require("../../models/postModel"));
 const userModel_1 = __importDefault(require("../../models/userModel"));
@@ -30,7 +29,7 @@ exports.default = {
     }),
     getPosts: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { userId } = req.body;
+            const userId = req.params.id;
             const data = yield postModel_1.default.find({ userId });
             if (data.length > 0) {
                 res.status(201).json({ data });
@@ -58,29 +57,6 @@ exports.default = {
             const userData = yield userModel_1.default.findOne({ _id: userId });
             const userPosts = yield postModel_1.default.find({ userId });
             res.status(201).json({ userData, userPosts });
-        }
-        catch (error) {
-            res.json(error);
-        }
-    }),
-    editProfile: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId, profile_img, cover_img, username, dob, bio, place, relationship, } = req.body;
-            const respose = yield userModel_1.default.findByIdAndUpdate(userId, {
-                profile_img: profile_img,
-                cover_img: cover_img,
-                username: username,
-                dob: dob,
-                bio: bio,
-                place: place,
-                relationship: relationship,
-            });
-            if (express_1.response) {
-                res
-                    .status(201)
-                    .json({ status: true, message: "profile update finished" });
-            }
-            res.json({ status: false, message: "somethig went wrong" });
         }
         catch (error) {
             res.json(error);
@@ -135,7 +111,7 @@ exports.default = {
     }),
     getAllComments: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { postId } = req.body;
+            const postId = req.params.id;
             const response = yield commentModel_1.default.find({ postId });
             res.status(201).json({ response });
         }

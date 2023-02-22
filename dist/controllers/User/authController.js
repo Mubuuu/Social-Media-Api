@@ -12,12 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const qrcode_1 = __importDefault(require("qrcode"));
 const userModel_1 = __importDefault(require("../../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt_1 = require("../../utils/jwt");
 const userModel_2 = __importDefault(require("../../models/userModel"));
-const mongoose_1 = __importDefault(require("mongoose"));
 exports.default = {
     postRegister: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -145,157 +143,6 @@ exports.default = {
             res.json(error);
         }
     }),
-    getUserDetails: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const userId = req.body.userId;
-        const user = yield userModel_1.default.findById(userId);
-        if (user) {
-            res.status(201).json(user);
-        }
-    }),
-    getAllUsers: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const users = yield userModel_2.default.find();
-            res.status(201).json({ users });
-        }
-        catch (error) {
-            res.json(error);
-        }
-    }),
-    follow: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { currId, userId } = req.body;
-            const user = yield userModel_2.default.findById(userId);
-            const currUser = yield userModel_2.default.findById(currId);
-            if (currUser === null || currUser === void 0 ? void 0 : currUser.following.includes(userId)) {
-                const resp = yield userModel_2.default.updateOne({ _id: currId }, {
-                    $pull: {
-                        following: new mongoose_1.default.Types.ObjectId(userId),
-                    },
-                });
-                const respo = yield userModel_2.default.updateOne({ _id: userId }, {
-                    $pull: {
-                        followers: new mongoose_1.default.Types.ObjectId(currId),
-                    },
-                });
-                res.status(201).json({ status: false, message: "follow validated" });
-            }
-            else {
-                const resp = yield userModel_2.default.updateOne({ _id: currId }, {
-                    $push: {
-                        following: new mongoose_1.default.Types.ObjectId(userId),
-                    },
-                });
-                const respo = yield userModel_2.default.updateOne({ _id: userId }, {
-                    $push: {
-                        followers: new mongoose_1.default.Types.ObjectId(currId),
-                    },
-                });
-                res.status(201).json({ status: true, message: "follow validated" });
-            }
-        }
-        catch (error) {
-            res.json(error);
-        }
-    }),
-    getFollowers: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId } = req.body;
-            const data = yield userModel_2.default.aggregate([
-                {
-                    $match: {
-                        _id: new mongoose_1.default.Types.ObjectId(userId),
-                    },
-                },
-                {
-                    $project: {
-                        followers: 1,
-                    },
-                },
-                {
-                    $unwind: {
-                        path: "$followers",
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "users",
-                        localField: "followers",
-                        foreignField: "_id",
-                        as: "followers",
-                    },
-                },
-                {
-                    $project: {
-                        followers: { $arrayElemAt: ["$followers", 0] },
-                    },
-                },
-            ]);
-            res.status(201).json(data);
-        }
-        catch (error) {
-            res.json(error);
-        }
-    }),
-    getFollowings: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { userId } = req.body;
-            const data = yield userModel_2.default.aggregate([
-                {
-                    $match: {
-                        _id: new mongoose_1.default.Types.ObjectId(userId),
-                    },
-                },
-                {
-                    $project: {
-                        following: 1,
-                    },
-                },
-                {
-                    $unwind: {
-                        path: "$following",
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "users",
-                        localField: "following",
-                        foreignField: "_id",
-                        as: "following",
-                    },
-                },
-                {
-                    $project: {
-                        following: { $arrayElemAt: ["$following", 0] },
-                    },
-                },
-            ]);
-            res.status(201).json(data);
-        }
-        catch (error) {
-            res.json(error);
-        }
-    }),
-    getLink: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const { url } = req.body;
-            qrcode_1.default.toDataURL(url, (err, link) => {
-                if (err)
-                    console.log(err, "error");
-                res.status(200).json(link);
-            });
-        }
-        catch (error) { }
-    }),
     changePassword: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             let { currpassword, newpassword, userId } = req.body;
@@ -326,16 +173,6 @@ exports.default = {
         }
         catch (error) {
             res.status(500).json(error);
-        }
-    }),
-    searchUsers: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { value } = req.body;
-        try {
-            const users = yield userModel_2.default.find({ "username": new RegExp(value, "i") });
-            res.status(201).json(users.slice(0, 10));
-        }
-        catch (error) {
-            res.json(error);
         }
     }),
 };

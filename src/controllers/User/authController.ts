@@ -4,7 +4,7 @@ import UserModel from "../../models/userModel";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../utils/jwt";
 import userModel from "../../models/userModel";
-import mongoose, { isObjectIdOrHexString } from "mongoose";
+import mongoose from "mongoose";
 export default {
   postRegister: async (req: Request, res: Response) => {
     try {
@@ -84,7 +84,7 @@ export default {
       }
     } catch (error) {}
   },
-  postLogin: async (req: Request, res: Response) => {
+  postLogin: async (req: Request, res: Response) => {    
     try {
       const { email, password }: { email: string; password: string } = req.body;
       const user = await UserModel.findOne({ email });
@@ -124,162 +124,6 @@ export default {
       res.json(error)
     }
   },
-  getUserDetails: async (req: Request, res: Response) => {
-    const userId = req.body.userId;
-    const user = await UserModel.findById(userId);
-    if (user) {
-      res.status(201).json(user);
-    }
-  },
-  getAllUsers: async (req: Request, res: Response) => {
-    try {
-      const users = await userModel.find();
-      res.status(201).json({ users });
-    } catch (error) {
-      res.json(error);
-    }
-  },
-  follow: async (req: Request, res: Response) => {
-    try {
-      const { currId, userId } = req.body;
-      const user = await userModel.findById(userId);
-      const currUser = await userModel.findById(currId);
-      if (currUser?.following.includes(userId)) {
-        const resp = await userModel.updateOne(
-          { _id: currId },
-          {
-            $pull: {
-              following: new mongoose.Types.ObjectId(userId),
-            },
-          }
-        );
-        const respo = await userModel.updateOne(
-          { _id: userId },
-          {
-            $pull: {
-              followers: new mongoose.Types.ObjectId(currId),
-            },
-          }
-        );
-        res.status(201).json({ status: false, message: "follow validated" });
-      } else {
-        const resp = await userModel.updateOne(
-          { _id: currId },
-          {
-            $push: {
-              following: new mongoose.Types.ObjectId(userId),
-            },
-          }
-        );
-        const respo = await userModel.updateOne(
-          { _id: userId },
-          {
-            $push: {
-              followers: new mongoose.Types.ObjectId(currId),
-            },
-          }
-        );
-        res.status(201).json({ status: true, message: "follow validated" });
-      }
-    } catch (error) {
-      res.json(error);
-    }
-  },
-  getFollowers: async (req: Request, res: Response) => {
-    try {
-      const { userId } = req.body;
-      const data = await userModel.aggregate([
-        {
-          $match: {
-            _id: new mongoose.Types.ObjectId(userId),
-          },
-        },
-        {
-          $project: {
-            followers: 1,
-          },
-        },
-        {
-          $unwind: {
-            path: "$followers",
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "followers",
-            foreignField: "_id",
-            as: "followers",
-          },
-        },
-        {
-          $project: {
-            followers: { $arrayElemAt: ["$followers", 0] },
-          },
-        },
-      ]);
-      res.status(201).json(data);
-    } catch (error) {
-      res.json(error);
-    }
-  },
-  getFollowings: async (req: Request, res: Response) => {
-    try {
-      const { userId } = req.body;
-      const data = await userModel.aggregate([
-        {
-          $match: {
-            _id: new mongoose.Types.ObjectId(userId),
-          },
-        },
-        {
-          $project: {
-            following: 1,
-          },
-        },
-        {
-          $unwind: {
-            path: "$following",
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "following",
-            foreignField: "_id",
-            as: "following",
-          },
-        },
-        {
-          $project: {
-            following: { $arrayElemAt: ["$following", 0] },
-          },
-        },
-      ]);
-      res.status(201).json(data);
-    } catch (error) {
-      res.json(error);
-    }
-  },
-  getLink: async (req: Request, res: Response) => {
-    try {
-      const { url } = req.body;
-      qr.toDataURL(url, (err, link) => {
-        if (err) console.log(err, "error");
-        res.status(200).json(link);
-      });
-    } catch (error) {}
-  },
   changePassword: async (req: Request, res: Response) => {
     try {
       let { currpassword, newpassword, userId } = req.body;
@@ -310,15 +154,6 @@ export default {
       }
     } catch (error) {
       res.status(500).json(error);
-    }
-  },
-  searchUsers: async (req: Request, res: Response) => {
-    const { value } = req.body;
-    try {
-      const users = await userModel.find({ "username": new RegExp(value,"i") });
-      res.status(201).json(users.slice(0,10))
-    } catch (error) {
-      res.json(error)
     }
   },
 };
