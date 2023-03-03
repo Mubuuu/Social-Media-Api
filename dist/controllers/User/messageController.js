@@ -13,31 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMessages = exports.addMessage = void 0;
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const messageModel_1 = __importDefault(require("../../models/messageModel"));
-const addMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//@desc Add Message
+//@route POST /api/message/
+//@access private
+exports.addMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { chatId, senderId, text } = req.body;
     const message = new messageModel_1.default({
         chatId,
         senderId,
         text,
     });
-    try {
-        const result = yield message.save();
-        res.status(201).json(result);
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-});
-exports.addMessage = addMessage;
-const getMessages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield message.save();
+    res.status(201).json(result);
+}));
+//@desc Get Messages
+//@route GET /api/message/:id
+//@access private
+exports.getMessages = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { chatId } = req.params;
-    try {
-        const result = yield messageModel_1.default.find({ chatId });
-        res.status(201).json(result);
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-});
-exports.getMessages = getMessages;
+    const result = yield messageModel_1.default.find({ chatId });
+    res.status(201).json(result);
+}));

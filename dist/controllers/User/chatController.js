@@ -13,41 +13,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findChat = exports.userChats = exports.createChat = void 0;
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const chatModel_1 = __importDefault(require("../../models/chatModel"));
-const createChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const newChat = new chatModel_1.default({
-            members: [req.body.senderId, req.body.receiverId]
-        });
-        const result = yield newChat.save();
-        res.status(200).json(result);
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-});
-exports.createChat = createChat;
-const userChats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const chat = yield chatModel_1.default.find({
-            members: { $in: [req.params.userId] }
-        });
-        res.status(200).json(chat);
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-});
-exports.userChats = userChats;
-const findChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const chat = yield chatModel_1.default.findOne({
-            members: { $all: [req.params.fistId, req.params.secondId] }
-        });
-        res.status(200).json(chat);
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-});
-exports.findChat = findChat;
+//@desc Create Message
+//@route POST /api/chat/
+//@access private
+exports.createChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newChat = new chatModel_1.default({
+        members: [req.body.senderId, req.body.receiverId],
+    });
+    const result = yield newChat.save();
+    res.status(200).json(result);
+}));
+//@desc Get single chat
+//@route GET /api/chat/:userId
+//@access private
+exports.userChats = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const chat = yield chatModel_1.default.find({
+        members: { $in: [req.params.userId] },
+    });
+    res.status(200).json(chat);
+}));
+//@desc Find chat
+//@route GET /api/chat/find/:fistId/:secondId
+//@access private
+exports.findChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const chat = yield chatModel_1.default.findOne({
+        members: { $all: [req.params.fistId, req.params.secondId] },
+    });
+    res.status(200).json(chat);
+}));
