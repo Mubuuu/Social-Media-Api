@@ -23,7 +23,8 @@ const protect = (0, express_async_handler_1.default)((req, res, next) => __await
     const token = authHeader.split(" ")[1];
     jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
         if (err) {
-            throw new Error("jwt errror");
+            res.status(401);
+            throw new Error("jwt is not validated");
         }
         else {
             const { id } = decoded;

@@ -13,22 +13,28 @@ import followRouter from "./routes/followRouter";
 import chatRouter from "./routes/chatRouter";
 import messageRouter from "./routes/messageRouter";
 import adminRouter from "./routes/adminRouter";
+import errorHandler from "./middleware/errorMiddleware";
 
 connectDB;
 const app: Application = express();
 
 app.use(function (req, res, next) {
-
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   // res.setHeader('Access-Control-Allow-Origin', 'https://www.connect.techmart.tech');
 
   // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
   // Pass to next layer of middleware
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   next();
 });
@@ -43,6 +49,7 @@ app.use("/api/shorts", shortsRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/admin", adminRouter);
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
