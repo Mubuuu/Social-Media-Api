@@ -18,13 +18,13 @@ const protect = asyncHandler(
     jwt.verify(
       token,
       process.env.SECRET_TOKEN,
-      (err: object | null, decoded: object | undefined) => {
+      async (err: object | null, decoded: object | undefined) => {
         if (err) {
           res.status(401);
           throw new Error("jwt is not validated");
         } else {
           const { id } = decoded as ITokenPayload;
-          req.body.userId = id;
+
           next();
         }
       }

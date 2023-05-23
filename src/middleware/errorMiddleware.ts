@@ -46,7 +46,7 @@ const errorHandler = (
       break;
 
     default:
-      console.log("No Error, All good !");
+      // console.log("No Error, All good !");
       break;
   }
 };
