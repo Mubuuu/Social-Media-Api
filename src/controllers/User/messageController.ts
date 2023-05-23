@@ -1,27 +1,26 @@
 import { Response, Request, response } from "express";
+import asyncHandler from "express-async-handler";
 import messageModel from "../../models/messageModel";
 
-export const addMessage = async (req: Request, res: Response) => {
+//@desc Add Message
+//@route POST /api/message/
+//@access private
+export const addMessage = asyncHandler(async (req: Request, res: Response) => {
   const { chatId, senderId, text } = req.body;
   const message = new messageModel({
     chatId,
     senderId,
     text,
   });
-  try {
-    const result = await message.save();
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
+  const result = await message.save();
+  res.status(201).json(result);
+});
 
-export const getMessages =async (req:Request,res:Response) => {
-    const {chatId} = req.params
-    try {
-        const result  = await messageModel.find({chatId})
-        res.status(201).json(result)
-    } catch (error) {
-        res.status(500).json(error)
-    }
-}
+//@desc Get Messages
+//@route GET /api/message/:id
+//@access private
+export const getMessages = asyncHandler(async (req: Request, res: Response) => {
+  const { chatId } = req.params;
+  const result = await messageModel.find({ chatId });
+  res.status(201).json(result);
+});
