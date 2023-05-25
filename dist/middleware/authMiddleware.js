@@ -21,16 +21,15 @@ const protect = (0, express_async_handler_1.default)((req, res, next) => __await
         throw new Error("auth failed");
     }
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
             res.status(401);
             throw new Error("jwt is not validated");
         }
         else {
             const { id } = decoded;
-            req.body.userId = id;
             next();
         }
-    });
+    }));
 }));
 exports.default = protect;

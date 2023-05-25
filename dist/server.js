@@ -21,8 +21,8 @@ const errorMiddleware_1 = __importDefault(require("./middleware/errorMiddleware"
 connection_1.default;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ['http://localhost:3000'],
-    // origin: ['https://www.quickshare.giftto.online'],
+    // origin: ['http://localhost:3000'],
+    origin: ['https://www.connect.techmart.tech'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     credentials: true,
     exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']
