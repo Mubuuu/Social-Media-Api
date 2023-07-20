@@ -88,6 +88,7 @@ export default {
   //@access public
   postLogin: asyncHandler(async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
+    console.log(email,1232)
     const user = await UserModel.findOne({ email });
     if (user) {
       if (user.active) {

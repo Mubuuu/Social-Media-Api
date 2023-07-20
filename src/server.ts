@@ -17,34 +17,34 @@ import errorHandler from "./middleware/errorMiddleware";
 
 connectDB;
 const app: Application = express();
-app.use(cors({
-  // origin: ['http://localhost:3000'],
-  origin: ['https://www.connect.techmart.tech'],
-  methods: ['GET', 'POST','PUT','DELETE','HEAD'],
-  credentials: true,
-  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']},
-  ))
+// app.use(cors({
+//   origin: ['http://localhost:3000'],
+//   // origin: ['https://www.connect.techmart.tech'],
+//   methods: ['GET', 'POST','PUT','DELETE','HEAD'],
+//   credentials: true,
+//   exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']},
+//   ))
 
-// app.use(function (req, res, next) {
-//   // Website you wish to allow to connect
-//   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-//   // res.setHeader('Access-Control-Allow-Origin', 'https://www.connect.techmart.tech');
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader('Access-Control-Allow-Origin', 'https://www.connect.techmart.tech');
 
-//   // Request methods you wish to allow
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD"
-//   );
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD"
+  );
 
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "X-Requested-With,content-type"
-//   );
-//   // Pass to next layer of middleware
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  // Pass to next layer of middleware
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-//   next();
-// });
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

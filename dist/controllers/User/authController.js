@@ -103,6 +103,7 @@ exports.default = {
     //@access public
     postLogin: (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
+        console.log(email, 1232);
         const user = yield userModel_1.default.findOne({ email });
         if (user) {
             if (user.active) {
